@@ -42,21 +42,27 @@ export function GasChart() {
 
     chartInstanceRef.current = chart;
 
-    // Create series for each chain
-    const ethereumSeries = (chart as any).addLineSeries({
-      color: '#3B82F6',
+    // Create series for each chain using the correct API
+    const ethereumSeries = (chart as any).addSeries('Area', {
+      lineColor: '#3B82F6',
+      topColor: '#3B82F6',
+      bottomColor: 'rgba(59, 130, 246, 0.1)',
       lineWidth: 2,
       priceFormat: { type: 'price', precision: 2, minMove: 0.01 },
     });
 
-    const polygonSeries = (chart as any).addLineSeries({
-      color: '#8B5CF6',
+    const polygonSeries = (chart as any).addSeries('Area', {
+      lineColor: '#8B5CF6',
+      topColor: '#8B5CF6', 
+      bottomColor: 'rgba(139, 92, 246, 0.1)',
       lineWidth: 2,
       priceFormat: { type: 'price', precision: 2, minMove: 0.01 },
     });
 
-    const arbitrumSeries = (chart as any).addLineSeries({
-      color: '#F97316',
+    const arbitrumSeries = (chart as any).addSeries('Area', {
+      lineColor: '#F97316',
+      topColor: '#F97316',
+      bottomColor: 'rgba(249, 115, 22, 0.1)',
       lineWidth: 2,
       priceFormat: { type: 'price', precision: 2, minMove: 0.01 },
     });
