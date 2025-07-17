@@ -1,41 +1,13 @@
-import { useEffect } from "react";
 import { GasTracker } from "@/components/GasTracker";
 import { TransactionSimulator } from "@/components/TransactionSimulator";
 import { GasChart } from "@/components/GasChart";
 import { ModeToggle } from "@/components/ModeToggle";
-import { useGasStore } from "@/store/gasStore";
 import { Activity, Zap } from "lucide-react";
+import { useGasWebSocket } from "@/hooks/use-gas-websocket";
 
 const Index = () => {
-  const { setUsdPrice, updateChainData, calculateSimulation } = useGasStore();
-
-  // Initialize with mock data for demo
-  useEffect(() => {
-    // Mock USD price
-    setUsdPrice(3247.82);
-
-    // Mock gas data
-    updateChainData('ethereum', {
-      baseFee: 12.5,
-      priorityFee: 1.2,
-      isConnected: true
-    });
-
-    updateChainData('polygon', {
-      baseFee: 42.3,
-      priorityFee: 30.1,
-      isConnected: true
-    });
-
-    updateChainData('arbitrum', {
-      baseFee: 0.02,
-      priorityFee: 0.01,
-      isConnected: true
-    });
-
-    // Calculate initial simulation
-    calculateSimulation();
-  }, [setUsdPrice, updateChainData, calculateSimulation]);
+  useGasWebSocket();
+  // Removed mock data initialization useEffect
 
   return (
     <div className="min-h-screen bg-background">
@@ -69,11 +41,11 @@ const Index = () => {
               Real-Time{" "}
               <span className="bg-gradient-primary bg-clip-text text-transparent">
                 Cross-Chain
-              </span>
-              {" "}Gas Tracking
+              </span>{" "}
+              Gas Tracking
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Monitor gas prices across Ethereum, Polygon, and Arbitrum. 
+              Monitor gas prices across Ethereum, Polygon, and Arbitrum.
               Simulate transaction costs and optimize your cross-chain strategy.
             </p>
           </div>
@@ -103,19 +75,27 @@ const Index = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
               <div className="space-y-1">
                 <div className="font-medium">Real-Time Data</div>
-                <div className="text-muted-foreground">WebSocket connections to native RPCs</div>
+                <div className="text-muted-foreground">
+                  WebSocket connections to native RPCs
+                </div>
               </div>
               <div className="space-y-1">
                 <div className="font-medium">USD Pricing</div>
-                <div className="text-muted-foreground">Uniswap V3 ETH/USDC pool events</div>
+                <div className="text-muted-foreground">
+                  Uniswap V3 ETH/USDC pool events
+                </div>
               </div>
               <div className="space-y-1">
                 <div className="font-medium">State Management</div>
-                <div className="text-muted-foreground">Zustand with live/simulation modes</div>
+                <div className="text-muted-foreground">
+                  Zustand with live/simulation modes
+                </div>
               </div>
               <div className="space-y-1">
                 <div className="font-medium">Visualization</div>
-                <div className="text-muted-foreground">Lightweight Charts candlesticks</div>
+                <div className="text-muted-foreground">
+                  Chart.js candlestick
+                </div>
               </div>
             </div>
           </section>

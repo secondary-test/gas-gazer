@@ -37,9 +37,8 @@ interface GasState {
     gasLimit: number;
     results: SimulationResult[];
   };
-  // Actions
   setMode: (mode: 'live' | 'simulation') => void;
-  updateChainData: (chain: keyof GasState['chains'], data: Partial<ChainData>) => void;
+  updateChainData: (chain: keyof GasState['chains'], data: Partial<ChainData> | ((prev: ChainData) => Partial<ChainData>)) => void;
   setUsdPrice: (price: number) => void;
   updateSimulation: (amount: string, gasLimit: number) => void;
   calculateSimulation: () => void;
@@ -85,17 +84,21 @@ export const useGasStore = create<GasState>((set, get) => ({
 
   setMode: (mode) => set({ mode }),
 
-  updateChainData: (chain, data) =>
-    set((state) => ({
-      chains: {
-        ...state.chains,
-        [chain]: {
-          ...state.chains[chain],
-          ...data,
-          lastUpdate: Date.now(),
+  updateChainData: (chain, dataOrUpdater) =>
+    set((state) => {
+      const prev = state.chains[chain];
+      const data = typeof dataOrUpdater === 'function' ? dataOrUpdater(prev) : dataOrUpdater;
+      return {
+        chains: {
+          ...state.chains,
+          [chain]: {
+            ...prev,
+            ...data,
+            lastUpdate: Date.now(),
+          },
         },
-      },
-    })),
+      };
+    }),
 
   setUsdPrice: (usdPrice) => set({ usdPrice }),
 
@@ -113,7 +116,7 @@ export const useGasStore = create<GasState>((set, get) => ({
     const results: SimulationResult[] = [];
 
     Object.entries(state.chains).forEach(([key, chain]) => {
-      const totalGasFee = (chain.baseFee + chain.priorityFee) / 1e9; // Convert from gwei to ETH
+      const totalGasFee = (chain.baseFee + chain.priorityFee) / 1e9;
       const gasCostEth = totalGasFee * state.simulation.gasLimit;
       const gasCostUsd = gasCostEth * state.usdPrice;
       const transactionValueUsd = parseFloat(state.simulation.amount) * state.usdPrice;
