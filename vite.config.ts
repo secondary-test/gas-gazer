@@ -5,15 +5,14 @@ import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ command, mode }) => ({
-  base: mode === "development" ? "/" : "/gas-gazer-crosschain-sim/",
+  base: command === "serve" ? "/" : "/gas-gazer/",
   server: {
     host: "::",
     port: 8080,
   },
   plugins: [
     react(),
-    mode === "development" && componentTagger(),
-  ].filter(Boolean),
+  ],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
